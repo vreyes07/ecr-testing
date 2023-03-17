@@ -1,40 +1,50 @@
-name: Deploy Topupnow app
+name: Build and push Docker image to ECR
 
 on:
   push:
     branches:
       - main
 
-jobs:
-  build-and-publish:
-    runs-on: ubuntu-latest
+env:
+  AWS_REGION: us-east-1
+  ECR_REGISTRY: 267602022023.dkr.ecr.us-east-1.amazonaws.com/personal-ecr
+  IMAGE_NAME: hello-world
+  TAG: ${{ github.sha }}
 
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
+
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-      
+
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-      
-      - name: Build and tag the Docker image
+
+      - name: Build and tag Docker image
         id: build-image
-        env:
-          ECR_REGISTRY: 267602022023.dkr.ecr.us-east-1.amazonaws.com/personal-ecr
-          IMAGE_NAME: hello-world
-        run: |
-          docker build -t $ECR_REGISTRY/$IMAGE_NAME:${GITHUB_SHA::8} .
-          echo "::set-output name=image-uri::$ECR_REGISTRY/$IMAGE_NAME:${GITHUB_SHA::8}"
-      
-      - name: Push the Docker image to ECR
         uses: docker/build-push-action@v2
         with:
-          push: true
-          tags: ${{ steps.build-image.outputs.image-uri }}
+          context: .
+          push: false
+          tags: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
+
+      - name: Tag Docker image with ECR registry URL
+        id: tag-image
+        run: echo ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} >> IMAGE_URL
+
+      - name: Push Docker image to Amazon ECR
+        id: push-image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          tags: ${{ steps.tag-image.outputs.IMAGE_URL }}
+
