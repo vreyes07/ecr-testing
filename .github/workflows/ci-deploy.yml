@@ -47,7 +47,7 @@ jobs:
         id: push-image
         uses: docker/build-push-action@v2
         with:
-          registry: ${{ ECR_REGISTRY }}
+          registry: ${{ env.ECR_REGISTRY }}
           context: .
           tags: ${{ steps.tag-image.outputs.IMAGE_URL }}
 
