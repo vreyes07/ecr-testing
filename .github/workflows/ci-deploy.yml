@@ -47,9 +47,14 @@ jobs:
 
       - name: Push Docker image to Amazon ECR
         id: push-image
-        uses: docker/build-push-action@v2
+        uses: mr-smithers-excellent/docker-build-push@v6
         with:
+          image: hello-world
           registry: ${{ env.ECR_REGISTRY }}
-          context: .
-          tags: ${{ steps.tag-image.outputs.IMAGE_URL }}
+          #context: .
+          #tags: ${{ steps.tag-image.outputs.IMAGE_URL }}
+          env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+
 
