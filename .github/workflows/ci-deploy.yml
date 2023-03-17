@@ -7,7 +7,7 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  ECR_REGISTRY: 267602022023.dkr.ecr.us-east-1.amazonaws.com/personal-ecr
+  ECR_REGISTRY: public.ecr.aws/m5z6c3t0/personal-ecr
   IMAGE_NAME: hello-world
   TAG: ${{ github.sha }}
 
