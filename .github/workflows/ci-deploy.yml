@@ -7,7 +7,7 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  ECR_REGISTRY: public.ecr.aws/m5z6c3t0/personal-ecr
+  ECR_REGISTRY: 267602022023.dkr.ecr.us-east-1.amazonaws.com/personal-ecr
   IMAGE_NAME: hello-world
   TAG: ${{ github.sha }}
 
@@ -36,7 +36,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          push: false
+          push: true
           tags: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
 
       - name: Tag Docker image with ECR registry URL
