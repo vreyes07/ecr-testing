@@ -43,8 +43,7 @@ jobs:
         id: tag-image
         run: |
           echo ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} >> IMAGE_URL
-          echo ${{  IMAGE_URL }}
-          
+
       - name: Push image to ECR registry
         id: push-image
         run: |
