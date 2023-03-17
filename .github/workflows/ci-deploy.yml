@@ -39,22 +39,21 @@ jobs:
           push: false
           tags: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
 
-      - name: Tag Docker image with ECR registry URL
-        id: tag-image
-        run: |
-          echo ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} >> IMAGE_URL
-          echo ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+      #- name: Tag Docker image with ECR registry URL
+      #  id: tag-image
+      #  run: echo ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} >> IMAGE_URL
 
-      - name: Push Docker image to Amazon ECR
+      - name: Push image to ECR registry
         id: push-image
-        uses: mr-smithers-excellent/docker-build-push@v6
-        with:
-          image: hello-world
-          registry: ${{ env.ECR_REGISTRY }}
-          #context: .
-          #tags: ${{ steps.tag-image.outputs.IMAGE_URL }}
-          #env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+        run: |
+          docker push ${{ env.ECR_REGISTRY}}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
 
+
+      #- name: Push Docker image to Amazon ECR
+      #  id: push-image
+      #  uses: docker/build-push-action@v2
+      #  with:
+      #    registry: ${{ env.ECR_REGISTRY }}
+      #    context: .
+      #    tags: ${{ steps.tag-image.outputs.IMAGE_URL }}
 
