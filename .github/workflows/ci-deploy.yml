@@ -39,9 +39,9 @@ jobs:
           push: false
           tags: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
 
-      #- name: Tag Docker image with ECR registry URL
-      #  id: tag-image
-      #  run: echo ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} >> IMAGE_URL
+      - name: Tag Docker image with ECR registry URL
+        id: tag-image
+        run: echo ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} >> IMAGE_URL
 
       - name: Push image to ECR registry
         id: push-image
