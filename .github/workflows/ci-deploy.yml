@@ -41,7 +41,9 @@ jobs:
 
       - name: Tag Docker image with ECR registry URL
         id: tag-image
-        run: echo ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} >> IMAGE_URL
+        run: |
+          echo ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} >> IMAGE_URL
+          echo ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
 
       - name: Push Docker image to Amazon ECR
         id: push-image
